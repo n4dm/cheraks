@@ -1,0 +1,18 @@
+[
+  {
+    "index": 0,
+    "timestamp": 1793003566,
+    "data": "Cheraks genesis block",
+    "previous_hash": "0",
+    "nonce": 0,
+    "hash": "f1f0f963d6784d0cd47b44e561f4456c7d6ea5ea7065fb8137ef9ba86f25510f"
+  },
+  {
+    "index": 1,
+    "timestamp": 1793003566,
+    "data": "Cheraks local test block 1",
+    "previous_hash": "f1f0f963d6784d0cd47b44e561f4456c7d6ea5ea7065fb8137ef9ba86f25510f",
+    "nonce": 4111,
+    "hash": "000035bdee7b67874104ae109724926ef5d3060749e6de26e2a9f98dead398e0"
+  }
+]
