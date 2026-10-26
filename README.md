@@ -1,417 +1,238 @@
 # CHERAKS (CHK)
 
-### An open-source, proof-of-work cryptocurrency experiment.
+### A digital currency designed around open participation.
 
-<p align="center">
-  <strong>Building the foundations of a decentralized digital currency.</strong>
-</p>
+Cheraks is a proposed peer-to-peer digital currency inspired by Bitcoin. Its long-term vision is to let people transfer digital value directly between wallets through a shared blockchain, without relying on a single company to maintain the transaction ledger.
 
-<p align="center">
-  <a href="https://github.com/n4dm/cheraks"><img src="https://img.shields.io/badge/status-early%20development-orange?style=for-the-badge" alt="Early development"></a>
-  <a href="https://github.com/n4dm/cheraks"><img src="https://img.shields.io/badge/language-Rust-black?style=for-the-badge&logo=rust" alt="Rust"></a>
-  <a href="https://github.com/n4dm/cheraks"><img src="https://img.shields.io/badge/consensus-proof%20of%20work-blue?style=for-the-badge" alt="Proof of work concept"></a>
-  <a href="https://github.com/n4dm/cheraks"><img src="https://img.shields.io/badge/network-not%20launched-lightgrey?style=for-the-badge" alt="Network not launched"></a>
-</p>
+The currency is called **Cheraks**, and its planned ticker symbol is **CHK**.
 
-<p align="center">
-  <a href="#-overview">Overview</a> ·
-  <a href="#-how-it-works">How it works</a> ·
-  <a href="#-getting-started">Get started</a> ·
-  <a href="#-developers">Developers</a> ·
-  <a href="#-roadmap">Roadmap</a>
-</p>
+Cheraks is being designed around three core ideas:
+
+- **Limited supply:** a planned maximum of 21 million CHK.
+- **Proof of work:** a proposed mining system for producing and validating blocks.
+- **Open participation:** a future network where independent computers can verify transactions and maintain the blockchain.
+
+Cheraks is currently experimental. These are the intended properties of the currency, not guarantees that a functioning public network already provides them.
 
 ---
 
-> **Development notice:** Cheraks is an experimental software project. The current prototype demonstrates basic blockchain concepts, including block hashing and proof-of-work mining. It is not a production-ready cryptocurrency, has no functioning public peer-to-peer network, and should not be used to store or transfer real value.
+## 1. What is Cheraks?
 
-## ◆ Overview
+Cheraks is intended to be a digital currency that exists on a blockchain rather than in a bank account controlled by a single institution.
 
-**Cheraks**, represented by the ticker **CHK**, is an open-source project exploring the development of a Bitcoin-inspired digital currency using Rust.
+In a traditional payment system, a central provider typically maintains the authoritative record of balances and transfers. In a decentralized cryptocurrency, network participants independently verify transactions according to shared protocol rules.
 
-The long-term objective is to develop a verifiable blockchain with proof-of-work consensus, a transparent issuance policy, independent network nodes, and tools for users and developers.
+The long-term goal for CHK is to provide a digital asset that users can hold in their own wallets and transfer to other users on the Cheraks network.
 
-The project starts with a small educational prototype and aims to evolve through testing, review, and incremental development.
+### The vision
 
-### Project principles
+- Send CHK between participating wallets.
+- Receive CHK without needing an account at a central bank or payment company.
+- Verify transactions using public blockchain data.
+- Allow independent nodes to validate the network's rules.
+- Use a publicly specified issuance policy with a planned maximum supply of 21 million CHK.
 
-- **Open development** — make the source code available for inspection and contributions.
-- **Verifiable rules** — build toward transparent consensus and issuance rules.
-- **Decentralization** — work toward a network that independent participants can operate.
-- **Security first** — validate transactions and blocks before considering a public launch.
-- **Developer friendly** — document the protocol, development environment, and testing process.
-- **Testnet before mainnet** — test with coins that have no monetary value before considering a production network.
+These capabilities require a complete blockchain, secure wallets, a functioning network, and extensive testing before they can be offered to users.
 
-## ◆ Project information
+## 2. How a CHK payment is intended to work
 
-| Property | Current plan |
+Imagine Alice wants to send 10 CHK to Bob.
+
+**Step 1 — Bob shares his receiving address.**
+
+Bob creates or opens a Cheraks wallet and shares his public receiving address with Alice.
+
+**Step 2 — Alice creates a transaction.**
+
+Alice's wallet prepares a transaction specifying Bob's address and the amount to transfer. The wallet signs the transaction using Alice's private key.
+
+**Step 3 — The network checks the transaction.**
+
+Nodes would verify that the signature is valid, that Alice has enough spendable CHK, that the transaction follows the protocol rules, and that the same funds have not already been spent.
+
+**Step 4 — A miner includes the transaction in a block.**
+
+Under the intended proof-of-work design, a miner searches for a block that satisfies the network's difficulty target.
+
+**Step 5 — Nodes verify the new block.**
+
+Independent nodes check the block and its transactions before accepting it as part of their local chain.
+
+**Step 6 — The payment gains confirmation.**
+
+As additional valid blocks build on top of the block containing Alice's payment, the transaction gains more confirmations. Confirmation reduces the likelihood of a reorganization reversing the payment, but it does not provide an absolute guarantee.
+
+```text
+Alice's wallet
+      |
+      | Creates and signs a payment
+      v
+Network nodes validate transaction
+      |
+      v
+Miner produces a valid proof of work
+      |
+      v
+Nodes validate the block
+      |
+      v
+Payment included in blockchain
+      |
+      v
+Bob sees the confirmed payment
+```
+
+**Current limitation:** This describes the intended transaction flow. Cheraks does not yet have a complete transaction system, production wallet, or public network.
+
+## 3. How CHK mining is intended to work
+
+Cheraks is planned to use **proof of work (PoW)**, the consensus approach associated with Bitcoin.
+
+Mining would involve specialized software repeatedly trying different candidate block values until a block hash satisfies the network's difficulty target.
+
+The miner that discovers a valid block can broadcast it to the network. Other nodes independently check the proof and all the block's contents.
+
+### Why proof of work?
+
+Proof of work is intended to make it costly to produce competing blocks while allowing other participants to verify proposed blocks relatively cheaply.
+
+The network would need clear rules for:
+
+- What makes a block valid.
+- How mining difficulty changes.
+- How the winning chain is selected.
+- What reward, if any, a valid block creates.
+- How transactions and fees are handled.
+- How invalid blocks and conflicting transactions are rejected.
+
+Mining does not automatically make a coin valuable, guarantee fairness, or eliminate attacks. Security depends on the complete protocol and the resources supporting the network.
+
+### Will users be able to mine CHK?
+
+Mining is a planned feature, but public mining is not available yet. The current prototype demonstrates simplified proof of work locally; it is not connected to a live mining network.
+
+## 4. CHK supply and monetary policy
+
+Cheraks has a **planned maximum supply of 21,000,000 CHK**.
+
+A maximum supply is intended to define an upper bound on the number of currency units that the protocol can create. To make that limit meaningful, every node must enforce the same issuance rules.
+
+The final monetary policy still needs to specify the block reward, issuance schedule, reward reductions, smallest unit, and transaction-fee rules.
+
+| Monetary property | Intended policy |
 |---|---|
-| Project name | Cheraks |
-| Ticker symbol | CHK |
-| Implementation language | Rust |
-| Intended consensus | Proof of work |
+| Currency name | Cheraks |
+| Ticker | CHK |
 | Planned maximum supply | 21,000,000 CHK |
-| Intended purpose | General-purpose digital currency |
-| Current stage | Early prototype |
-| Current network | Local demonstration only |
+| Consensus approach | Proof of work |
+| Block reward | Not finalized |
+| Block interval | Not finalized |
+| Reward reduction schedule | Not finalized |
+| Smallest unit | To be specified |
+| Public issuance | Not active |
+
+The supply limit is a design target, not yet a production-enforced guarantee. No claim is made that 21 million CHK have been issued, mined, distributed, or made available to the public.
+
+## 5. What gives CHK value?
+
+A cryptocurrency does not acquire value simply because it has a name, a ticker, a limited supply, or mining software.
+
+Any future market value for CHK would depend on factors such as:
+
+- Whether the network works securely and reliably.
+- Whether people find the currency useful.
+- Whether users, developers, and businesses choose to participate.
+- Whether the protocol and monetary rules are credible.
+- Whether there is genuine demand and a functioning market.
+
+Cheraks makes no promise of a price, return, listing, or future market demand. CHK should not be represented as an investment with guaranteed appreciation.
+
+## 6. How Cheraks is intended to be decentralized
+
+The long-term plan is for multiple independently operated nodes to maintain and verify the blockchain.
+
+Rather than trusting one server's transaction history, each node would apply the protocol rules to the blocks and transactions it receives.
+
+A decentralized network requires more than publishing source code. It needs independent operators, a working peer-to-peer protocol, reliable block synchronization, consistent validation rules, and protection against malicious or unavailable peers.
+
+Cheraks has not yet launched this network. No public node endpoints or active network statistics are currently available.
+
+## 7. Wallets, addresses, and private keys
+
+In a mature Cheraks network, a wallet would help users manage their keys, generate receiving addresses, prepare transactions, and inspect payment status.
+
+A receiving address is meant to be shareable. A private key must remain secret because it authorizes transactions for the funds it controls.
+
+Users should never share private keys or recovery phrases with anyone claiming to offer CHK support.
+
+A production wallet has not yet been released. Do not use the prototype to store real funds or treat test coins as valuable assets.
+
+## 8. Transaction fees and confirmations
+
+The final CHK protocol must define how transaction fees work and how users can estimate confirmation times.
+
+In many proof-of-work networks, miners select transactions for blocks, and nodes independently validate them. Fees can influence which transactions miners choose, but they do not guarantee immediate inclusion.
+
+Cheraks has not finalized its block interval, fee policy, or confirmation guidance. Therefore, no specific transaction speed, fee, or capacity should be promised at this stage.
+
+## 9. Testnet and mainnet
+
+A **testnet** is a separate network used to test software and protocol behavior. Testnet coins are intended to have no monetary value.
+
+A **mainnet** is the production network where the protocol is used for real transactions.
+
+Cheraks should launch a testnet only after it has a complete, verifiable transaction system, peer-to-peer networking, persistent storage, and consistent consensus rules. A mainnet should be considered only after substantial independent testing and security review.
+
+| Network | Status |
+|---|---|
+| Local prototype | In early development |
 | Public testnet | Not launched |
 | Mainnet | Not launched |
-| Production wallet | Not available |
-| Exchange listings | None announced |
-| Official website | Not yet announced |
+| Production wallets | Not available |
+| Official explorer | Not available |
 
-**Important:** The 21 million CHK figure is a planned monetary policy, not yet an independently verified, production-enforced supply limit. The ticker is a project identifier, not evidence that a transferable currency exists.
+No public CHK faucet, exchange listing, or official node service has been announced.
 
-## ◆ How Cheraks works
+## 10. Frequently asked questions
 
-The intended design follows the broad concepts behind proof-of-work blockchains. The current prototype implements only a small subset of these concepts.
+**Is Cheraks a real, transferable cryptocurrency right now?**
 
-### 1. Transactions
+No. Cheraks is an early software prototype with a proposed currency design. It does not yet have a functioning public blockchain on which users can transfer CHK.
 
-In a complete cryptocurrency, a transaction would describe a transfer of value between participants.
+**How many CHK exist today?**
 
-A full implementation needs to verify digital signatures, confirm that funds are available, reject duplicate spending, and enforce transaction rules.
+There is no verified public supply. The planned maximum supply is 21 million CHK, but the production issuance rules have not been completed.
 
-**Current status:** A complete transaction and balance system has not been implemented.
+**Can I buy CHK?**
 
-### 2. Block creation
+There is no official public sale or exchange listing announced by the project.
 
-A blockchain groups validated transactions into blocks. Each block refers to its predecessor, creating a linked history.
+**Can I mine CHK today?**
 
-Conceptually:
+The current prototype can demonstrate simplified local mining. It is not public mining and does not produce coins that can be transferred on a live Cheraks network.
 
-```text
-Genesis Block
-     |
-     v
-  Block #1
-     |
-     v
-  Block #2
-     |
-     v
-  Block #3
-     |
-     v
-    ...
-```
+**Can I use CHK to pay for products or services?**
 
-Changing an earlier block changes its hash and breaks the link to subsequent blocks unless the chain is rebuilt.
+Not currently through an official Cheraks network. That would require a working blockchain and willing recipients.
 
-**Current status:** The prototype contains basic block structures and hash-linked blocks.
+**Will CHK's price increase?**
 
-### 3. Cryptographic hashing
+There is no basis for promising a price or return. A future market may never develop.
 
-Cheraks currently uses SHA-256 hashing in its Rust prototype.
+**Why is the supply planned at 21 million?**
 
-A hash function maps input data to a fixed-length digest. The digest can be used to identify a block's contents and support proof-of-work calculations.
+The initial design borrows the familiar 21-million-unit limit associated with Bitcoin. Cheraks must still finalize and enforce its own issuance schedule before the limit can be treated as a protocol guarantee.
 
-Illustrative example:
+**Is Cheraks affiliated with Bitcoin?**
 
-```text
-Block data
-    |
-    v
- SHA-256
-    |
-    v
-Block hash
-```
+No affiliation is implied. Cheraks is an independent project inspired by general proof-of-work cryptocurrency concepts.
 
-A hash is not an encryption key, digital signature, or proof that a transaction is legitimate.
+## 11. Project status
 
-### 4. Proof-of-work mining
+Cheraks is being developed incrementally, with an emphasis on verifiable rules and transparent documentation.
 
-Proof of work requires a miner to search for a block header that satisfies a difficulty target.
+The immediate objective is to turn the educational prototype into a rigorously specified blockchain, then build and test a multi-node testnet before considering any production release.
 
-In a simplified demonstration, a miner changes a nonce and hashes the block repeatedly until the hash satisfies the configured condition.
+**Cheraks (CHK) — experimental digital currency, early development.**
 
-```text
-        Candidate block
-              |
-              v
-       Calculate hash
-              |
-              v
-      Meets difficulty?
-          /       \
-        No         Yes
-        |           |
-   Change nonce   Accept candidate
-        |           |
-        +-- retry   v
-                 New block
-```
-
-The prototype uses a simplified leading-zero condition to demonstrate mining. This is not yet a production consensus protocol.
-
-A real network needs a precisely defined target calculation, difficulty adjustment, block validation rules, chain selection, and protection against malformed or adversarial blocks.
-
-### 5. Independent nodes
-
-The long-term objective is for separate computers to run the same protocol and verify the same blockchain.
-
-```mermaid
-flowchart TD
-    A[Node A] <--> B[Peer-to-peer network]
-    C[Node B] <--> B
-    D[Node C] <--> B
-    E[Node D] <--> B
-    B --> F[Shared validated chain]
-```
-
-This is a planned architecture, not a description of a currently operating Cheraks network.
-
-**Current status:** Peer discovery, network transport, block synchronization, and multi-node consensus are not implemented.
-
-## ◆ Architecture
-
-The initial implementation is intentionally small.
-
-```mermaid
-flowchart TD
-    A[Cargo project] --> B[Rust application]
-    B --> C[Block structures]
-    C --> D[SHA-256 hashing]
-    D --> E[Proof-of-work demonstration]
-    E --> F[Local chain validation]
-```
-
-The future architecture may add the following components:
-
-| Component | Responsibility | Status |
-|---|---|---|
-| Block model | Represent blocks and their links | Basic prototype |
-| Hashing | Calculate SHA-256 block hashes | Prototype |
-| Mining | Search for a simplified proof of work | Prototype |
-| Validation | Check basic chain integrity | Basic prototype |
-| Transactions | Verify transfers and prevent double spending | Not implemented |
-| Digital signatures | Authenticate transaction authorization | Not implemented |
-| Ledger and balances | Track spendable value | Not implemented |
-| Persistent storage | Retain blockchain data between restarts | Not implemented |
-| Peer-to-peer networking | Connect nodes and exchange messages | Not implemented |
-| Difficulty adjustment | Adapt mining difficulty over time | Not implemented |
-| Supply enforcement | Enforce issuance limits and reward rules | Not production-ready |
-| Wallet | Manage keys and construct transactions | Not implemented |
-| Block explorer | Display verified network activity | Not implemented |
-
-## ◆ Monetary policy
-
-Cheraks is being designed around a planned maximum supply of **21 million CHK**.
-
-The exact issuance schedule must be specified and tested before a public testnet or mainnet can be considered reliable.
-
-A complete monetary policy will need to define:
-
-- The smallest divisible unit of CHK.
-- Initial block subsidy.
-- Block interval target.
-- Reward reduction schedule, if any.
-- Transaction fee rules.
-- Maximum monetary issuance.
-- Handling of invalid or duplicate issuance.
-- Integer arithmetic and rounding rules.
-- Consensus behavior during protocol upgrades.
-
-The current prototype's reward constants are educational placeholders. They should not be interpreted as an operational monetary policy or a promise of future coin value.
-
-## ◆ Getting started
-
-### Requirements
-
-- Windows, Linux, or macOS with a supported Rust toolchain.
-- Rust compiler (`rustc`).
-- Cargo, Rust's build and package tool.
-- Internet access for the initial dependency download.
-
-Install Rust using the official instructions:
-
-https://www.rust-lang.org/tools/install
-
-Verify the installation:
-
-```bash
-rustc --version
-cargo --version
-```
-
-### Download the source
-
-Clone the repository:
-
-```bash
-git clone https://github.com/n4dm/cheraks.git
-cd cheraks
-```
-
-Alternatively, download the ZIP archive from GitHub and extract it.
-
-### Verify the project structure
-
-The intended layout is:
-
-```text
-cheraks/
-├── Cargo.toml
-├── README.md
-├── .gitignore
-└── src/
-    ├── lib.rs
-    └── main.rs
-```
-
-Check that `Cargo.toml` declares the package and dependencies correctly.
-
-### Run the tests
-
-```bash
-cargo test
-```
-
-This command compiles the project and executes its automated tests. A successful run should end with a test result reporting no failures.
-
-The tests must actually be run on the current revision before anyone claims they pass.
-
-### Run the local demonstration
-
-```bash
-cargo run
-```
-
-If compilation succeeds, the application should execute the local blockchain demonstration defined by the current source code.
-
-The demonstration is local only. It does not connect to peers, create a public testnet, or issue transferable CHK.
-
-### Troubleshooting
-
-**`cargo` is not recognized**
-
-Close and reopen your terminal after installing Rust. If the error continues, check that Rust's Cargo directory is available on your Windows PATH.
-
-**C++ build tools are missing**
-
-Follow the official Rust installation instructions for the required Windows toolchain.
-
-**A dependency cannot be downloaded**
-
-Check your internet connection and retry. Cargo retrieves dependencies the first time they are needed.
-
-**Compilation fails**
-
-Run `cargo test`, copy the complete error output, and include it in a GitHub issue or development discussion. Do not assume that a source file appearing on GitHub means it compiles.
-
-## ◆ Developers
-
-Contributions are welcome as the project develops.
-
-### Development workflow
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Make a focused change.
-4. Run formatting and tests.
-5. Explain the change and its security implications.
-6. Open a pull request for review.
-
-Useful commands:
-
-```bash
-cargo fmt --all
-cargo test
-cargo check
-```
-
-These commands format Rust code, run tests, and check compilation without producing a final executable.
-
-### Suggested contribution areas
-
-- Unit tests for block hashing and validation.
-- Clear protocol specifications.
-- Improved error handling.
-- Deterministic test fixtures.
-- Transaction and signature design.
-- Persistent storage design.
-- Peer-to-peer protocol research.
-- Security threat modeling.
-- Documentation and beginner guides.
-
-### Development standards
-
-- Prefer small, reviewable changes.
-- Avoid undocumented changes to consensus rules.
-- Never include private keys, passwords, or tokens in commits.
-- Test invalid inputs as well as valid inputs.
-- Document protocol changes and their compatibility impact.
-- Do not claim cryptographic or security guarantees without evidence.
-- Obtain independent review before implementing consensus-critical production code.
-
-## ◆ Roadmap
-
-The roadmap describes intended work, not completed features or guaranteed release dates.
-
-- [x] Publish the initial repository.
-- [x] Create a basic Rust project structure.
-- [x] Add a prototype for block hashing and simplified proof of work.
-- [ ] Verify the build and tests on a clean development environment.
-- [ ] Improve block validation and error handling.
-- [ ] Specify transaction formats and digital signature rules.
-- [ ] Implement a secure ledger and spending rules.
-- [ ] Add persistent blockchain storage.
-- [ ] Define a complete consensus and monetary policy specification.
-- [ ] Implement peer-to-peer networking.
-- [ ] Test multiple independent nodes.
-- [ ] Build a public testnet with explicitly worthless test coins.
-- [ ] Add testnet documentation, monitoring, and a block explorer.
-- [ ] Conduct independent security and protocol reviews.
-- [ ] Evaluate whether a production launch is appropriate.
-
-Mainnet is not scheduled. It should only be considered after the protocol, software, operational processes, and security assumptions have undergone substantial review.
-
-## ◆ Security
-
-Cheraks is experimental software and must not be treated as a secure financial system.
-
-Until the project has a complete and reviewed implementation:
-
-- Do not store real funds in the prototype.
-- Do not advertise test coins as investments.
-- Do not reuse private keys from other wallets.
-- Do not expose an unfinished node service to the public internet.
-- Do not assume a mined block is valid merely because it meets the simplified mining condition.
-- Report potential vulnerabilities privately to the maintainers before publishing details that could enable exploitation.
-
-No security audit or production-readiness assessment is currently claimed.
-
-## ◆ Network and community
-
-**Repository:** https://github.com/n4dm/cheraks
-
-Use GitHub to:
-
-- Read and review the source code.
-- Report reproducible bugs.
-- Suggest features.
-- Discuss protocol design.
-- Contribute documentation and tests.
-
-Please verify the repository's available issue and discussion settings before relying on them.
-
-Official website, social accounts, public node endpoints, faucet, explorer, exchange listings, and release binaries have not been announced.
-
-## ◆ License
-
-No license has been declared yet.
-
-Until a license is added to the repository, do not assume that the source code is available for unrestricted redistribution or commercial reuse. A maintainer should select and add an appropriate license before inviting broad reuse.
-
-## ◆ Final note
-
-Cheraks is at the beginning of its development journey. The priority is to build a correct, understandable, testable protocol before pursuing a public cryptocurrency network.
-
-**Build carefully. Verify everything. Test before launch.**
-
----
-
-<p align="center">
-  <sub>Cheraks (CHK) · Open development · Experimental software</sub>
-</p>
+*No public network, transferable currency, market price, or production security guarantee is currently claimed.*
