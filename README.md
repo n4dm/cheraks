@@ -1,19 +1,22 @@
 # Cheraks (CHK)
 
-**An experimental proof-of-work blockchain project under active development.**
+**A public blockchain project built for open participation.**
 
-Cheraks explores the design and implementation of a peer-to-peer digital currency. The repository currently contains small Rust and Go blockchain prototypes. It is not a production cryptocurrency and is not connected to a public peer-to-peer network.
+Cheraks is a peer-to-peer digital currency project. This repository is the public source of the project, with Rust and Go implementations that are being developed into the complete Cheraks network.
 
-> **Development status:** Experimental prototype. Do not use it to store, send, or receive real funds. CHK has no verified public circulating supply or official market price.
+The repository foundation comes first: clear documentation, repeatable development checks, security-reporting guidance, and a structure that can support the implementation work ahead. Core network capabilities will be documented as they are implemented and verified.
 
-## What exists today
+> **Important:** The current code in this repository contains local blockchain implementations. It does not yet demonstrate a complete public peer-to-peer network, production wallet, or transferable CHK transaction system. Do not use the current code to store or transfer real funds.
 
-- **Rust prototype:** A local in-memory chain with SHA-256 block hashing, simplified proof of work, block-link validation, and a demonstration reward counter.
-- **Go prototype:** A local JSON-backed chain that creates and mines demonstration blocks, validates saved block links, and refuses to overwrite a saved chain when loading or validation fails.
-- **Validation tests:** Rust unit tests covering genesis proof, block linkage, tampering, reward-data checks, difficulty consistency, and supply constants.
-- **Development checks:** The Rust and Go code can be checked locally with the commands below.
+## Repository contents
 
-These are separate experiments, not two compatible implementations of one finalized consensus protocol. The current prototypes do not implement a complete transaction model, cryptographic wallet/signature system, peer-to-peer networking, chain synchronization, or production consensus.
+- **Rust implementation:** In-memory blockchain, SHA-256 block hashing, simplified proof of work, block-link validation, and a demonstration reward counter.
+- **Go implementation:** Local JSON-backed chain, fixed-difficulty block mining, basic chain validation, and file persistence.
+- **Tests:** Rust unit tests for selected block-integrity and reward-data checks.
+- **CI:** GitHub Actions checks for Rust formatting, tests and release builds, plus Go tests and static analysis.
+- **Documentation:** Architecture, current protocol status, contribution guidance, and security reporting.
+
+The Rust and Go implementations are currently separate code paths; they do not yet implement a shared finalized protocol or interoperable clients.
 
 ## Quick start
 
@@ -22,16 +25,18 @@ These are separate experiments, not two compatible implementations of one finali
 - Rust toolchain with Cargo
 - Go version compatible with the version declared in `go.mod`
 
-### Run the Rust demonstration
+### Rust
 
 ```bash
+cargo fmt --check
 cargo test --all-targets
+cargo build --release
 cargo run
 ```
 
-The Rust program mines a demonstration chain locally and prints whether its in-memory validation succeeds.
+The Rust program mines a demonstration chain in memory and prints the result of its local validation.
 
-### Run the Go demonstration
+### Go
 
 ```bash
 go test ./...
@@ -39,27 +44,29 @@ go vet ./...
 go run ./cmd/cheraks
 ```
 
-The Go program reads or creates `cheraks-chain.json`, mines a local demonstration block, validates the chain, and saves it. **Back up this file before running the Go program if you need to preserve its contents.** The program can append a block when the saved chain is valid.
+The Go program reads or creates `cheraks-chain.json`, mines a local demonstration block, validates the chain, and saves it. **Back up this file before running the program if you need to preserve its contents.** A successful run can append a block to the saved chain.
 
-## Project design targets
+## Project parameters
 
-The following are design intentions, not guarantees of a deployed network:
+These are current design targets, not claims about a deployed network:
 
-- **Name:** Cheraks
-- **Ticker:** CHK (planned)
-- **Consensus direction:** Proof of work
-- **Proposed maximum supply:** 21,000,000 CHK
-- **Public testnet:** Not launched
-- **Mainnet:** Not launched
-- **Production wallet:** Not available
+| Property | Current position |
+|---|---|
+| Project name | Cheraks |
+| Ticker | CHK (planned) |
+| Consensus direction | Proof of work |
+| Proposed maximum supply | 21,000,000 CHK |
+| Public testnet | Not launched |
+| Mainnet | Not launched |
+| Production wallet | Not available |
 
-The Rust prototype defines supply-related constants and a simplified demonstration reward counter. Those mechanisms are not a finalized, production-enforced monetary policy. The Go prototype is a separate local chain experiment and does not implement CHK issuance.
+The Rust code defines supply-related constants and a demonstration reward counter. This is not a finalized, production-enforced monetary policy. The Go implementation does not implement the same issuance model. No verified public circulating supply or official market price is claimed.
 
-## Current limitations
+## Implementation work ahead
 
-Cheraks is not ready for public use. Before a testnet or mainnet can be considered, the project needs a specified and consistently implemented protocol, real transaction validation and signatures, a peer-to-peer transport and synchronization design, persistent storage rules, fork-choice and difficulty-adjustment rules, comprehensive adversarial testing, and independent security review.
+To deliver a complete public network, the project needs a finalized protocol and consistent implementation of transaction validation, cryptographic signatures, wallet/key handling, peer-to-peer networking, chain synchronization, persistent node storage, consensus and fork-choice rules, issuance and fee rules, and adversarial testing. Production deployment should follow thorough independent review.
 
-Passing local tests does not prove that a blockchain is secure. The repository has not been independently audited, and no production-security guarantee is made.
+Passing local tests is useful evidence about the tested behavior, but it does not establish that the whole system is secure or production-ready.
 
 ## Documentation
 
@@ -68,14 +75,10 @@ Passing local tests does not prove that a blockchain is secure. The repository h
 - [Contributing](CONTRIBUTING.md)
 - [Security reporting](SECURITY.md)
 
-## Development checks
-
-The GitHub Actions workflow runs Rust tests/build checks and Go tests/vet on pushes and pull requests. A green CI run means those checks passed; it is not a security audit or proof of protocol correctness.
-
 ## License
 
-No license file is currently included in this repository. The `license = "MIT"` package metadata previously present in `Cargo.toml` was not a substitute for an actual license grant and has been removed. Until a license is selected and added, do not assume this code is licensed for reuse, modification, or redistribution.
+No license file is currently included. The package metadata has been updated so it does not claim a license that has not been selected and granted. Until a license is chosen and added, do not assume that public visibility grants permission to reuse, modify, or redistribute the code.
 
 ---
 
-Cheraks is an experimental software project. Project descriptions distinguish implemented prototype behavior from future design goals; nothing here should be interpreted as a claim that a live public cryptocurrency network exists.
+Cheraks is publicly documented here, and the implementation will continue to be built and verified in this repository. Documentation distinguishes current code from planned functionality so contributors can see what exists and what remains to be implemented.
