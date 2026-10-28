@@ -6,7 +6,13 @@ fn main() {
     println!("WARNING: prototype only. Coins have no monetary value.");
     println!("This is not a secure cryptocurrency or a public network yet.\n");
 
-    let mut chain = Blockchain::new(2);
+    let mut chain = match Blockchain::try_new(2) {
+        Ok(chain) => chain,
+        Err(error) => {
+            eprintln!("Failed to initialize Cheraks: {error}");
+            std::process::exit(1);
+        }
+    };
     println!("Created genesis block: {}", chain.latest_block().hash);
 
     match chain.mine_block("First locally mined demonstration block") {
