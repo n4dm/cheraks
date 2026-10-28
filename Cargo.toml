@@ -2,7 +2,8 @@
 name = "cheraks"
 version = "0.1.0"
 edition = "2021"
-description = "Educational proof-of-work blockchain prototype for Cheraks (CHK)"
+description = "Proof-of-work blockchain implementation for Cheraks (CHK)"
 
 [dependencies]
+ed25519-dalek = "2.1"
 sha2 = "0.10"
