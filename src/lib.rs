@@ -110,7 +110,13 @@ impl Blockchain {
             return false;
         }
 
-        if self.blocks[0].height != 0 || !self.blocks[0].has_valid_proof() {
+        let genesis = &self.blocks[0];
+        if genesis.height != 0
+            || genesis.previous_hash != "0".repeat(64)
+            || genesis.data != "Cheraks genesis block — test coins have no monetary value"
+            || genesis.difficulty != self.difficulty
+            || !genesis.has_valid_proof()
+        {
             return false;
         }
 
@@ -119,14 +125,21 @@ impl Blockchain {
             let previous = &self.blocks[index - 1];
             if block.height != index as u64
                 || block.previous_hash != previous.hash
+                || block.difficulty != self.difficulty
                 || !block.has_valid_proof()
             {
                 return false;
             }
 
-            // Prototype-only supply accounting: each non-genesis block awards 50 CHK,
-            // except the final block may receive the remaining amount.
-            let reward = INITIAL_BLOCK_REWARD_UNITS.min(MAX_SUPPLY_UNITS.saturating_sub(expected_issued));
+            // Validate the reward recorded in the block data.
+            let reward = INITIAL_BLOCK_REWARD_UNITS
+                .min(MAX_SUPPLY_UNITS.saturating_sub(expected_issued));
+
+            let expected_prefix = format!("reward_units={reward};");
+            if !block.data.starts_with(&expected_prefix) {
+                return false;
+            }
+
             expected_issued = expected_issued.saturating_add(reward);
         }
 
@@ -144,6 +157,16 @@ fn unix_timestamp() -> u64 {
 #[cfg(test)]
 mod unit_tests {
     use super::*;
+
+    #[test]
+    fn rejects_modified_genesis_data() {
+        let mut chain = Blockchain::new(1);
+        let genesis = &mut chain.blocks[0];
+        genesis.data.push_str(" modified");
+        genesis.mine();
+
+        assert!(!chain.is_valid());
+    }
 
     #[test]
     fn genesis_block_has_valid_proof() {
@@ -167,6 +190,34 @@ mod unit_tests {
         let mut chain = Blockchain::new(1);
         chain.mine_block("hello");
         chain.blocks[1].data.push_str(" tampered");
+        assert!(!chain.is_valid());
+    }
+
+    #[test]
+    fn rejects_mismatched_reward_data() {
+        let mut chain = Blockchain::new(1);
+        chain.mine_block("reward audit test");
+
+        let block = chain.blocks.last_mut().unwrap();
+        block.data = block.data.replacen(
+            "reward_units=5000000000",
+            "reward_units=1",
+            1,
+        );
+        block.mine();
+
+        assert!(!chain.is_valid());
+    }
+
+    #[test]
+    fn rejects_block_with_mismatched_difficulty() {
+        let mut chain = Blockchain::new(2);
+        chain.mine_block("difficulty audit test");
+
+        let block = chain.blocks.last_mut().unwrap();
+        block.difficulty = 0;
+        block.mine();
+
         assert!(!chain.is_valid());
     }
 
