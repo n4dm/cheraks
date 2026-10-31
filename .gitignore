@@ -1,1 +1,7 @@
 /target/
+
+# Local Cheraks node data and SQLite databases
+/data/
+*.db
+*.db-shm
+*.db-wal

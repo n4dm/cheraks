@@ -6,4 +6,9 @@ description = "Educational proof-of-work blockchain prototype for Cheraks (CHK)"
 license = "MIT"
 
 [dependencies]
+ed25519-dalek = { version = "3.0.0", features = ["rand_core"] }
+rand = "0.9"
+rusqlite = { version = "0.41.1", features = ["bundled"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
 sha2 = "0.10"
