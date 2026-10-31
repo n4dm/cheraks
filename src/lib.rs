@@ -22,6 +22,8 @@ pub fn calculate_block_reward(block_height: u64) -> u64 {
     INITIAL_BLOCK_REWARD_UNITS >> halvings
 }
 
+/// Maximum supported leading-zero difficulty for this local demonstration miner.
+/// This is a resource-safety limit, not a production network consensus parameter.
 pub const MAX_DIFFICULTY: usize = 5;
 
 /// A basic CHK transfer expressed in atomic units.
@@ -463,16 +465,12 @@ impl UtxoLedger {
     }
 
     /// Iterates over unspent outputs for internal storage operations.
-    pub(crate) fn unspent_entries(
-        &self,
-    ) -> impl Iterator<Item = (&UtxoOutPoint, &UtxoOutput)> {
+    pub(crate) fn unspent_entries(&self) -> impl Iterator<Item = (&UtxoOutPoint, &UtxoOutput)> {
         self.unspent.iter()
     }
 
     /// Iterates over spent outpoints and the transaction IDs that spent them.
-    pub(crate) fn spent_entries(
-        &self,
-    ) -> impl Iterator<Item = (&UtxoOutPoint, &[u8; 32])> {
+    pub(crate) fn spent_entries(&self) -> impl Iterator<Item = (&UtxoOutPoint, &[u8; 32])> {
         self.spent.iter()
     }
 
@@ -735,7 +733,7 @@ impl Block {
     }
 
     /// Educational proof of work: find a SHA-256 hash beginning with N zeroes.
-    /// Mines a SHA-256 proof with bounded difficulty.
+    /// Mining is bounded by the supported difficulty and nonce range.
     /// Returns false if difficulty is unsupported or the nonce space is exhausted.
     pub fn mine(&mut self) -> bool {
         self.hash.clear();
@@ -754,11 +752,13 @@ impl Block {
                 return true;
             }
 
-            if self.nonce == u64::MAX {
-                return false;
+            match self.nonce.checked_add(1) {
+                Some(next_nonce) => self.nonce = next_nonce,
+                None => {
+                    self.hash.clear();
+                    return false;
+                }
             }
-
-            self.nonce += 1;
         }
     }
 
@@ -972,6 +972,10 @@ impl Blockchain {
     /// Mines a demonstration block and issues a reward without exceeding the supply cap.
     /// This is NOT a production coinbase transaction or a complete consensus implementation.
     pub fn mine_block(&mut self, data: impl Into<String>) -> Option<&Block> {
+        if self.difficulty > MAX_DIFFICULTY {
+            return None;
+        }
+
         let remaining = MAX_SUPPLY_UNITS.saturating_sub(self.issued_units);
         if remaining == 0 {
             return None;
@@ -1072,7 +1076,7 @@ impl Blockchain {
     }
 
     pub fn is_valid(&self) -> bool {
-        if self.blocks.is_empty() {
+        if self.blocks.is_empty() || self.difficulty > MAX_DIFFICULTY {
             return false;
         }
 
@@ -2324,8 +2328,6 @@ mod unit_tests {
             MAX_DIFFICULTY + 1,
         );
 
-        // Construct a matching hash with the requested leading zeroes.
-        // This demonstrates that proof verification itself enforces the limit.
         block.hash = block.calculate_hash();
         assert!(!block.has_valid_proof());
     }
@@ -2345,7 +2347,6 @@ mod unit_tests {
         let previous_len = chain.blocks.len();
         let previous_issued = chain.issued_units;
 
-        // Make the next block's mining difficulty unsupported.
         chain.difficulty = 6;
 
         assert!(chain.mine_block("should not be appended").is_none());
@@ -2368,6 +2369,28 @@ mod unit_tests {
     #[test]
     fn block_reward_respects_supply_cap() {
         assert_eq!(MAX_SUPPLY_UNITS, MAX_SUPPLY_CHK * ATOMIC_UNITS_PER_CHK);
+    }
+
+    #[test]
+    fn mining_rejects_unsupported_difficulty_without_work() {
+        let mut block = Block::new(0, "0".repeat(64), "test".into(), MAX_DIFFICULTY + 1);
+        block.mine();
+
+        assert!(block.hash.is_empty());
+        assert!(!block.has_valid_proof());
+
+        assert!(matches!(
+            Blockchain::try_new(MAX_DIFFICULTY + 1),
+            Err(BlockchainError::UnsupportedDifficulty { .. })
+        ));
+    }
+
+    #[test]
+    fn blockchain_does_not_append_block_at_unsupported_difficulty() {
+        assert!(matches!(
+            Blockchain::try_new(MAX_DIFFICULTY + 1),
+            Err(BlockchainError::UnsupportedDifficulty { .. })
+        ));
     }
 
     #[test]

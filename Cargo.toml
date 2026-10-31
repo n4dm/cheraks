@@ -3,7 +3,6 @@ name = "cheraks"
 version = "0.1.0"
 edition = "2021"
 description = "Educational proof-of-work blockchain prototype for Cheraks (CHK)"
-license = "MIT"
 
 [dependencies]
 ed25519-dalek = { version = "3.0.0", features = ["rand_core"] }
